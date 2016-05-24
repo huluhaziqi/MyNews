@@ -17,9 +17,21 @@ public @interface ActivityFragmentInject {
      * @return
      */
     int contentViewId() default -1;
+
     /**
      *
      */
 
-    int
+    int menuId() default -1;
+
+    boolean enableSlider() default false;
+
+    boolean hasNavigationView() default false;
+
+    int toolBarTitle() default -1;
+
+    int toolBatIndicate() default -1;
+
+    int menuDefaultCheckItem() default -1;
+
 }
