@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+import de.greenrobot.dao.query.Query;
 import greendao.NewsChannelTable;
 import greendao.NewsChannelTableDao;
 import rx.Subscription;
@@ -32,8 +33,9 @@ public class INewsInteractorImpl implements INewsInterator<List<NewsChannelTable
         return (Subscription) Observable.create(new Observable.OnSubscribe<List<NewsChannelTable>>() {
             @Override
             public void call(Subscriber<? super List<NewsChannelTable>> subscriber) {
+                final NewsChannelTableDao newsChannelTableDao = ((App) App.getContext()).getNewsDaoSession().getNewsChannelTableDao();
+
                 if (App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).getBoolean("initDb", false)) {
-                    final NewsChannelTableDao newsChannelTableDao = ((App) App.getContext()).getNewsDaoSession().getNewsChannelTableDao();
 
                     List<String> channelName = Arrays.asList(App.getContext().getResources().getStringArray(R.array.news_channel));
                     List<String> channelId = Arrays.asList(App.getContext().getResources().getStringArray(R.array.news_channel_id));
@@ -46,7 +48,38 @@ public class INewsInteractorImpl implements INewsInterator<List<NewsChannelTable
                 App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).edit().putBoolean("initDb", true);
                 Log.e("Tag", "数据库初始化完毕");
 
+                final Query<NewsChannelTable> build = newsChannelTableDao.queryBuilder()
+                        .where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(true))
+                        .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build();
+                subscriber.onNext(build.list());
+                subscriber.onCompleted();
+
             }
-        });
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        callBack.beforeRequest();
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<NewsChannelTable>>() {
+                    @Override
+                    public void onCompleted() {
+                        callBack.requestCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callBack.requsetError(e.getLocalizedMessage() + "\n" + e);
+                    }
+
+                    @Override
+                    public void onNext(List<NewsChannelTable> newsChannelTables) {
+                        callBack.requestSuccess(newsChannelTables);
+                    }
+                })
+
+
+                ;
     }
 }
