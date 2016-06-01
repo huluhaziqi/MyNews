@@ -26,7 +26,9 @@ public class NewsDaoSession extends AbstractDaoSession {
                           Map<Class<? extends AbstractDao<?, ?>>, DaoConfig> daoConfigMap) {
         super(db);
         daoConfig = daoConfigMap.get(NewsChannelTableDao.class).clone();
+        daoConfig.initIdentityScope(type);
         newsChannelTableDao = new NewsChannelTableDao(daoConfig, this);
+
         registerDao(NewsChannelTable.class, newsChannelTableDao);//绑定类型和dao
     }
 

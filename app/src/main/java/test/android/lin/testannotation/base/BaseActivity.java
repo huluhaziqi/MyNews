@@ -161,8 +161,8 @@ public class BaseActivity<T extends BasePresenter> extends AppCompatActivity imp
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(mMenuId,menu);
-        return  true;
+        getMenuInflater().inflate(mMenuId, menu);
+        return true;
     }
 
     protected void initFinishRxBus() {
@@ -190,5 +190,12 @@ public class BaseActivity<T extends BasePresenter> extends AppCompatActivity imp
     @Override
     public void hideProgress() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null)
+            mPresenter.onDestroy();
     }
 }

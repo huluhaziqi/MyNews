@@ -92,7 +92,10 @@ public class INewsChannelInteractorImpl
                             .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build().list());
                     map.put(false, dao.queryBuilder().where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(false))
                             .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build().list());
-
+                    List<NewsChannelTable> test = dao.queryBuilder().where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(true))
+                            .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build().list();
+                    Log.e("tag", test.toString());
+                    Log.e("Tag", map.toString());
                     subscriber.onNext(map);
                 } else {
                     if (selectState) {
@@ -164,6 +167,8 @@ public class INewsChannelInteractorImpl
             @Override
             public void onNext(Map<Boolean, List<NewsChannelTable>> booleanListMap) {
                 callBack.requestSuccess(booleanListMap);
+
+                Log.e("Tag", "接收频道的数据");
             }
         });
     }

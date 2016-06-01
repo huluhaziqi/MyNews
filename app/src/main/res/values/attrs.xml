@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PacManRefreshHead">
+        <attr name="paclconColor" format="color|reference" />
+    </declare-styleable>
+    <declare-styleable name="RefreshHead">
+        <attr name="icons_night" format="color|reference" />
+    </declare-styleable>
+</resources>

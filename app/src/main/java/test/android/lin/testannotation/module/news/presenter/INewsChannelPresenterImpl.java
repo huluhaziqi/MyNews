@@ -1,5 +1,7 @@
 package test.android.lin.testannotation.module.news.presenter;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import test.android.lin.testannotation.base.BasePresenterImpl;
 import test.android.lin.testannotation.module.news.model.INewsChannelInteractor;
 import test.android.lin.testannotation.module.news.model.INewsChannelInteractorImpl;
 import test.android.lin.testannotation.module.news.view.INewsChannelView;
+import test.android.lin.testannotation.util.RxBus;
 
 /**
  * Created by lxb on 16/5/25.
@@ -40,6 +43,8 @@ public class INewsChannelPresenterImpl extends BasePresenterImpl<INewsChannelVie
     @Override
     public void onDestroy() {
         //ADD-TODO
+        Log.e("Tag", "onDestroy");
+        RxBus.get().post("channelChange", mChannelChange);//发布channelChange
         super.onDestroy();
     }
 

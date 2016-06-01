@@ -34,23 +34,28 @@ public class INewsInteractorImpl implements INewsInterator<List<NewsChannelTable
             @Override
             public void call(Subscriber<? super List<NewsChannelTable>> subscriber) {
                 final NewsChannelTableDao newsChannelTableDao = ((App) App.getContext()).getNewsDaoSession().getNewsChannelTableDao();
+                Log.e("Tag","初始化数据库了吗"+ App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).getBoolean("initDb", false));
+                if (!App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).getBoolean("initDb", false)) {
 
-                if (App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).getBoolean("initDb", false)) {
-
-                    List<String> channelName = Arrays.asList(App.getContext().getResources().getStringArray(R.array.news_channel));
-                    List<String> channelId = Arrays.asList(App.getContext().getResources().getStringArray(R.array.news_channel_id));
-
-                    for (int i = 0; i < channelName.size(); i++) {
-                        NewsChannelTable table = new NewsChannelTable(channelName.get(i), channelId.get(i), Api.getType(channelId.get(i)), i <= 2, i, i <= 2);
-                        newsChannelTableDao.insert(table);
-                    }
+                List<String> channelName = Arrays.asList(App.getContext().getResources().getStringArray(R.array.news_channel));
+                List<String> channelId = Arrays.asList(App.getContext().getResources().getStringArray(R.array.news_channel_id));
+                Log.e("Tag", channelId.toString());
+                Log.e("Tag", channelName.toString());
+                for (int i = 0; i < channelName.size(); i++) {
+                    System.out.println(i);
+                    Log.e("Tag", channelId.get(i));
+                    NewsChannelTable table = new NewsChannelTable(channelName.get(i), channelId.get(i), Api.getType(channelId.get(i)), i <= 2, i, i <= 2);
+                    newsChannelTableDao.insert(table);
+                    Log.e("Tag ", "i" + i + table.getNewsChannelType());
                 }
-                App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).edit().putBoolean("initDb", true);
+                }
+                App.getContext().getSharedPreferences(Constant.APP_NAME, Context.MODE_PRIVATE).edit().putBoolean("initDb", true).apply();
                 Log.e("Tag", "数据库初始化完毕");
 
                 final Query<NewsChannelTable> build = newsChannelTableDao.queryBuilder()
                         .where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(true))
                         .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build();
+                Log.e("Tag", build.list().toString());
                 subscriber.onNext(build.list());
                 subscriber.onCompleted();
 
@@ -76,7 +81,9 @@ public class INewsInteractorImpl implements INewsInterator<List<NewsChannelTable
                     @Override
                     public void onNext(List<NewsChannelTable> newsChannelTables) {
                         callBack.requestSuccess(newsChannelTables);
+                        Log.e("Tag", "数据接收完毕");
                     }
+
                 })
 
 

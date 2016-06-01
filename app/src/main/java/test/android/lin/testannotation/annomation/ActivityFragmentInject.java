@@ -34,4 +34,6 @@ public @interface ActivityFragmentInject {
 
     int menuDefaultCheckItem() default -1;
 
+    boolean handleRefreshLayout() default false;
+
 }

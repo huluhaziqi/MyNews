@@ -13,6 +13,8 @@ import de.greenrobot.dao.internal.DaoConfig;
  * Created by linxiaobin on 2016/5/23.
  */
 public class NewsChannelTableDao extends AbstractDao<NewsChannelTable, String> {
+    public static final String TABLENAME = "NEWS_CHANNEL_TABLE";//一定要配置
+
     public NewsChannelTableDao(DaoConfig config) {
         super(config);
     }
@@ -35,10 +37,10 @@ public class NewsChannelTableDao extends AbstractDao<NewsChannelTable, String> {
         db.execSQL("CREATE TABLE" + constraint + "\"NEWS_CHANNEL_TABLE\""
                 + "(\"NEWS_CHANNEL_NAME\"  TEXT PRIMARY KEY NOT NULL,"
                 + "\"NEWS_CHANNEL_ID\" TEXT NOT NULL,"
-                + "\"NEWS_CHANNEL_TYPE TEXT NOT NULL,"
-                + "\"NEWS_CHANNEL_SELECT INTEGER NOT NULL,"
-                + "\"NEWS_CHANNEL_INDEX INTEGER NOT NULL,"
-                + "\"NEWS_CHANNEL_FIXED INTEGER" +
+                + "\"NEWS_CHANNEL_TYPE\" TEXT NOT NULL,"
+                + "\"NEWS_CHANNEL_SELECT\" INTEGER NOT NULL,"
+                + "\"NEWS_CHANNEL_INDEX\" INTEGER NOT NULL,"
+                + "\"NEWS_CHANNEL_FIXED\" INTEGER" +
                 ");");
         db.execSQL("CREATE INDEX " + constraint + "IDX_NEWS_CHANNEL_TABLE_NEWS_CHANNEL_NAME ON NEWS_CHANNEL_TABLE" +
                 " (\"NEWS_CHANNEL_NAME\");");
@@ -51,17 +53,21 @@ public class NewsChannelTableDao extends AbstractDao<NewsChannelTable, String> {
 
     @Override
     protected NewsChannelTable readEntity(Cursor cursor, int offset) {
-        NewsChannelTable newsChannelTable = new NewsChannelTable();
-        newsChannelTable.setNewsChannelName(cursor.getString(offset + 0));
-        newsChannelTable.setNewsChannelId(cursor.getString(offset + 1));
-        newsChannelTable.setNewsChannelType(cursor.getString(offset + 2));
-        newsChannelTable.setNewsChannelSelect(cursor.getShort(offset + 3) != 0);
-        newsChannelTable.setNewsChannelIndex(cursor.getShort(offset + 4));
-        newsChannelTable.setNewsChannelFixed(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
+//        NewsChannelTable newsChannelTable = new NewsChannelTable();
+//        newsChannelTable.setNewsChannelName(cursor.getString(offset + 0));
+//        newsChannelTable.setNewsChannelId(cursor.getString(offset + 1));
+//        newsChannelTable.setNewsChannelType(cursor.getString(offset + 2));
+//        newsChannelTable.setNewsChannelSelect(cursor.getShort(offset + 3) != 0);
+//        newsChannelTable.setNewsChannelIndex(cursor.getShort(offset + 4));
+//        newsChannelTable.setNewsChannelFixed(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
 
-//        NewsChannelTable newsChannelTable1 = new NewsChannelTable(cursor.getString(offset + 0), cursor.getString(offset + 1),
-//                cursor.getString(offset + 2), cursor.getShort(offset + 3) != 0, cursor.getShort(offset + 4), cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
-        return newsChannelTable;
+        NewsChannelTable newsChannelTable1 = new NewsChannelTable(cursor.getString(offset + 0),
+                cursor.getString(offset + 1),
+                cursor.getString(offset + 2),
+                cursor.getShort(offset + 3) != 0,
+                cursor.getShort(offset + 4),
+                cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
+        return newsChannelTable1;
     }
 
     @Override
