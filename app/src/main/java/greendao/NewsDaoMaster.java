@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.AbstractDaoMaster;
 import de.greenrobot.dao.AbstractDaoSession;
+import de.greenrobot.dao.DaoException;
 import de.greenrobot.dao.identityscope.IdentityScopeType;
 
 /**
@@ -25,10 +26,6 @@ public class NewsDaoMaster extends AbstractDaoMaster {
     }
 
 
-    @Override
-    protected void registerDaoClass(Class<? extends AbstractDao<?, ?>> daoClass) {
-        super.registerDaoClass(daoClass);
-    }
 
     public static abstract class OpenHelper extends SQLiteOpenHelper {//继承SQLiteOpenHelper
 
@@ -86,6 +83,5 @@ public class NewsDaoMaster extends AbstractDaoMaster {
     @Override
     public NewsDaoSession newSession(IdentityScopeType type) {
         return new NewsDaoSession(db, type, daoConfigMap);
-        ;
     }
 }

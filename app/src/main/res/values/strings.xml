@@ -74,4 +74,6 @@
         <item>T1371543208049</item>
 
     </string-array>
+
+    <string name="news_channel_manager">频道管理</string>
 </resources>

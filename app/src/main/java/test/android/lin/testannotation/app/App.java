@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
 import greendao.NewsChannelTableDao;
 import greendao.NewsDaoMaster;
 import greendao.NewsDaoSession;
@@ -17,6 +20,7 @@ public class App extends Application {
     private static Context applicationContext;
     private NewsChannelTableDao newsChannelTableDao;
     private NewsDaoSession newsDaoSession;
+    private RefWatcher refWatcher;
 
     public NewsChannelTableDao getNewsChannelTableDao() {
         return newsChannelTableDao;
@@ -25,7 +29,13 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setupDatabase();
         applicationContext = this;
+        refWatcher = LeakCanary.install(this);
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        return ((App) (context.getApplicationContext())).refWatcher;
     }
 
     private void setupDatabase() {

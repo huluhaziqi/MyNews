@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -158,6 +159,12 @@ public class BaseActivity<T extends BasePresenter> extends AppCompatActivity imp
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(mMenuId, menu);
+        return true;
+    }
+
     protected void initFinishRxBus() {
 
     }
@@ -183,5 +190,12 @@ public class BaseActivity<T extends BasePresenter> extends AppCompatActivity imp
     @Override
     public void hideProgress() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null)
+            mPresenter.onDestroy();
     }
 }
