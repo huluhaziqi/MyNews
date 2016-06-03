@@ -125,6 +125,7 @@ public class Api {
 
     /**
      * 新闻类别获取类型
+     *
      * @param id
      * @return
      */
@@ -138,5 +139,18 @@ public class Api {
                 break;
         }
         return OTHER_TYPE;
+    }
+
+    public static String getHost(int hostType) {
+        switch (hostType) {
+            case HostType.NETEASE_NEWS_VIDEO:
+                return Api.NETEAST_HOST;
+            case HostType.SINA_NEWS_PHOTO:
+                return Api.SINA_PHOTO_HOST;
+            case HostType.WEATHER_INFO:
+                return Api.WEATHER_HOST;
+        }
+        return "";
+
     }
 }

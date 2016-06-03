@@ -11,6 +11,8 @@ import retrofit2.http.Query;
 import rx.Observable;
 import test.android.lin.testannotation.bean.NeteastNewsDetail;
 import test.android.lin.testannotation.bean.NeteastNewsSummary;
+import test.android.lin.testannotation.bean.NeteastVideoSummary;
+import test.android.lin.testannotation.bean.SinaPhotoDetail;
 import test.android.lin.testannotation.bean.SinaPhotoList;
 
 /**
@@ -22,7 +24,7 @@ public interface NewsService {
             @Header("Cache-Control") String cacheControl,
             @Path("type") String type,
             @Path("id") String id,
-            @Path("startPage") String startPage;
+            @Path("startPage") int startPage
     );
 
     @GET("nc/article/{postId}/full.html")
@@ -31,12 +33,31 @@ public interface NewsService {
 
     @GET("list.json")
     Observable<SinaPhotoList> getSinaPhotoList(
-        @Header("Cache-Control") String cacheControl,
-        @Query("channel") String photoTypeId,
-        @Query("adid") String adid,
-        @Query("wm") String wm,
-        @Query("from") String from,
-        @Query("chwm") String chwm,
-        @Query("oldchwm") String oldchwm,
-        @Query("imei") String imei, @Query("uid") String uid, @Query("p") int page);
+            @Header("Cache-Control") String cacheControl,
+            @Query("channel") String photoTypeId,
+            @Query("adid") String adid,
+            @Query("wm") String wm,
+            @Query("from") String from,
+            @Query("chwm") String chwm,
+            @Query("oldchwm") String oldchwm,
+            @Query("imei") String imei, @Query("uid") String uid, @Query("p") int page);
+
+    @GET("article.json")
+    Observable<SinaPhotoDetail> getSinaPhotoDetail(
+            @Header("Cache-Control") String cacheControl,
+            @Query("postt") String postt,
+            @Query("wm") String wm,
+            @Query("from") String from,
+            @Query("chwm") String chwm,
+            @Query("oldchwm") String oldchwm,
+            @Query("imei") String imei, @Query("uid") String uid, @Query("id") String id);
+
+
+    @GET("nc/video/list/{id}/n/{startPage}-10.html")
+    Observable<Map<String, List<NeteastVideoSummary>>> getVideoList(
+            @Header("Cache-Control") String cacheControl, @Path("id") String id, @Path("startPage") int startPage);
+
+
+//    @GET("weather_mini")
+//    Observable<WeatherInfo> getWeatherInfo(@Header("Cache-Control") String cacheControl, @Query("city") String city);
 }
