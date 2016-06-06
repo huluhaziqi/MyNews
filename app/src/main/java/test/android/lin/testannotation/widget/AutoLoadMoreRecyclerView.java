@@ -97,9 +97,9 @@ public class AutoLoadMoreRecyclerView extends RecyclerView {
             return max;
         } else if (getLayoutManager() instanceof GridLayoutManager) {
             return ((GridLayoutManager) getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        } else if (getLayoutManager() instanceof LinearLayoutManager) {
+        } else
             return ((LinearLayoutManager) getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        }
+
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener loadMoreListener) {

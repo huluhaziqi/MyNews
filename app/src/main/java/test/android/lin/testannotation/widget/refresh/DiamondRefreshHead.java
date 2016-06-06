@@ -86,7 +86,7 @@ public class DiamondRefreshHead extends RefreshHead {
                 (mWidth - mTotalWidth) / 2 + mCubeSize * 2 + mCubeSize * 5 - mLoadingOffset,
                 mCubeSize * 2 + mCubeSize * 2 * 2 + mCubeSize - mFirstBottomOffset + getPaddingTop() - mLoadingOffset,
                 paint);
-        paint.setColor(ContextCompat.getColor((getContext(), R.color.material_purple_700));
+        paint.setColor(ContextCompat.getColor(getContext(),R.color.material_purple_700));
         paint.setAlpha(mAlpha);
 
         for (int i = 0; i < 3; i++) {
@@ -142,7 +142,7 @@ public class DiamondRefreshHead extends RefreshHead {
         if (mode == MeasureSpec.EXACTLY)
             return size;
         else if (mode == MeasureSpec.UNSPECIFIED) {
-            return defaultSize
+            return defaultSize;
         } else if (mode == MeasureSpec.AT_MOST)
             return Math.min(defaultSize, size);
         return size;

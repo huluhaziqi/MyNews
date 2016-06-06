@@ -5,6 +5,7 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -37,5 +38,8 @@ public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getTextView(int viewId) {
         return (TextView) findViewById(viewId);
+    }
+    public ImageView getImageView(int viewId) {
+        return (ImageView) getView(viewId);
     }
 }

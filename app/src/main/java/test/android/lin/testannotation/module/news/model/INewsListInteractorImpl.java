@@ -5,11 +5,17 @@ import android.util.Log;
 import com.socks.library.KLog;
 
 import java.util.List;
+import java.util.Map;
 
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
+import test.android.lin.testannotation.Http.Api;
 import test.android.lin.testannotation.Http.HostType;
 import test.android.lin.testannotation.Http.manager.RetrofitManager;
 import test.android.lin.testannotation.bean.NeteastNewsSummary;
@@ -20,7 +26,7 @@ import test.android.lin.testannotation.callback.RequestCallBack;
  */
 public class INewsListInteractorImpl implements INewsListInteractor<List<NeteastNewsSummary>> {
     @Override
-    public Subscription requestNewsList(final RequestCallBack<List<NeteastNewsSummary>> callBack, String type, String id, int startPage) {
+    public Subscription requestNewsList(final RequestCallBack<List<NeteastNewsSummary>> callBack, final String type, final String id, int startPage) {
         Log.e("新闻列表", "type " + type + "; id " + id);
 
         return (Subscription) RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO)
@@ -33,9 +39,39 @@ public class INewsListInteractorImpl implements INewsListInteractor<List<Neteast
                 .doOnError(new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                         KLog.e("错误时处理" + throwable + "--- " + throwable.getLocalizedMessage());
+                        KLog.e("错误时处理" + throwable + "--- " + throwable.getLocalizedMessage());
+                    }
+                }).flatMap(new Func1<Map<String, List<NeteastNewsSummary>>, Observable<NeteastNewsSummary>>() {
+                    @Override
+                    public Observable<NeteastNewsSummary> call(Map<String, List<NeteastNewsSummary>> stringListMap) {
+                        if (id.equals(Api.HOUSE_ID)) {
+                            return Observable.from(stringListMap.get("北京"));
+                        } else
+                            return Observable.from(stringListMap.get(id));
+                    }
+                }).toSortedList(new Func2<NeteastNewsSummary, NeteastNewsSummary, Integer>() {
+                    @Override
+                    public Integer call(NeteastNewsSummary neteastNewsSummary, NeteastNewsSummary neteastNewsSummary2) {
+                        return neteastNewsSummary2.ptime.compareTo(neteastNewsSummary.ptime);
+                    }
+                }).subscribe(new Subscriber<List<NeteastNewsSummary>>() {
+                    @Override
+                    public void onCompleted() {
+                        callBack.requestCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callBack.requsetError(e.getLocalizedMessage() + "\n" + e);
+                    }
+
+                    @Override
+                    public void onNext(List<NeteastNewsSummary> neteastNewsSummaries) {
+                        callBack.requestSuccess(neteastNewsSummaries);
                     }
                 })
+
+
                 ;
 
 

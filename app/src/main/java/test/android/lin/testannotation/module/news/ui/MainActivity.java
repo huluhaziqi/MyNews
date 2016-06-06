@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import rx.functions.Action1;
 import test.android.lin.testannotation.base.BaseActivity;
 import test.android.lin.testannotation.R;
 import test.android.lin.testannotation.annomation.ActivityFragmentInject;
+import test.android.lin.testannotation.base.BaseFragment;
+import test.android.lin.testannotation.base.BaseFragmentAdapter;
 import test.android.lin.testannotation.base.INewsPresenter;
 import test.android.lin.testannotation.module.news.presenter.INewsPresenterImpl;
 import test.android.lin.testannotation.module.news.ui.adapter.BasePageAdapter;
@@ -59,23 +63,38 @@ public class MainActivity extends BaseActivity<INewsPresenter> implements INewsV
         viewPager = (ViewPager) findViewById(R.id.view_page);
         List<String> title = new ArrayList<>();
         List<View> view = new ArrayList<>();
+        List<BaseFragment> fragments = new ArrayList<>();
         if (newsChannelTables != null) {
             for (NewsChannelTable table : newsChannelTables) {
                 title.add(table.getNewsChannelName());
+                final NewsListFragment fragment = NewsListFragment.newInstance(table.getNewsChannelId()
+                        , table.getNewsChannelType(), table.getNewsChannelIndex());
+                fragments.add(fragment);
             }
         }
-        for (int i = 0; i < title.size(); i++) {
-            TextView textview = new TextView(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            textview.setLayoutParams(params);
-            textview.setText("内容是" + i);
-            textview.setGravity(Gravity.CENTER);
-            view.add(textview);
+//        for (int i = 0; i < title.size(); i++) {
+//            TextView textview = new TextView(this);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//            textview.setLayoutParams(params);
+//            textview.setText("内容是" + i);
+//            textview.setGravity(Gravity.CENTER);
+//            view.add(textview);
+//        }
+        if (viewPager.getAdapter() == null) {
+            KLog.e("adapter为空");
+            BaseFragmentAdapter adapter = new BaseFragmentAdapter(getSupportFragmentManager(),
+                    fragments, title);
+            viewPager.setAdapter(adapter);
+        } else {
+            KLog.e("adapter不为空");
+            final BaseFragmentAdapter adapter = (BaseFragmentAdapter) viewPager.getAdapter();
+            adapter.updateFragment(fragments, title);
         }
-        BasePageAdapter basePageAdapter = new BasePageAdapter(view, title);
-        viewPager.setAdapter(basePageAdapter);
+        viewPager.setCurrentItem(0, false);
         tablayout.setupWithViewPager(viewPager);
-        tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tablayout.setScrollPosition(0, 0, true);
+//        setOnTabSelectEvent(viewPager, tabLayout);
+//        setOnT
     }
 
     @Override

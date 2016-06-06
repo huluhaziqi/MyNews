@@ -1,7 +1,12 @@
 package test.android.lin.testannotation.module.news.ui;
 
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -9,10 +14,14 @@ import test.android.lin.testannotation.R;
 import test.android.lin.testannotation.annomation.ActivityFragmentInject;
 import test.android.lin.testannotation.base.BaseFragment;
 import test.android.lin.testannotation.base.BaseRecyclerAdapter;
+import test.android.lin.testannotation.base.BaseRecyclerViewHolder;
+import test.android.lin.testannotation.base.BaseSpacesItemDecoration;
 import test.android.lin.testannotation.bean.NeteastNewsSummary;
 import test.android.lin.testannotation.common.DataLoadType;
 import test.android.lin.testannotation.module.news.presenter.INewsListPresenter;
+import test.android.lin.testannotation.module.news.presenter.INewsListPresenterImpl;
 import test.android.lin.testannotation.module.news.view.INewsListView;
+import test.android.lin.testannotation.util.MeasureUtil;
 import test.android.lin.testannotation.widget.AutoLoadMoreRecyclerView;
 import test.android.lin.testannotation.widget.refresh.RefreshLayout;
 
@@ -55,12 +64,45 @@ public class NewsListFragment extends BaseFragment<INewsListPresenter> implement
     @Override
     protected void initView(View fragmentRootView) {
         mRecyclerView = (AutoLoadMoreRecyclerView) fragmentRootView.findViewById(R.id.recycler_view);
-        mRefreshLayout = (RefreshLayout)fragmentRootView.findViewById(R.id.refresh_layout);
-        mPresenter = new INE
+        mRefreshLayout = (RefreshLayout) fragmentRootView.findViewById(R.id.refresh_layout);
+        mPresenter = new INewsListPresenterImpl(this, mNewsType, mNewsId);
     }
 
     @Override
     public void updateNewList(List<NeteastNewsSummary> data, @DataLoadType.DataLoadTypeChecker int type) {
+        switch (type) {
+            case DataLoadType.TYPE_REFRESH_SUCCESS:
+                mRefreshLayout.refreshFinish();
+                if (mAdapter == null) {
+                    initNewsList(data);
+                }
+        }
+    }
+
+    private void initNewsList(List<NeteastNewsSummary> data) {
+        mAdapter = new BaseRecyclerAdapter<NeteastNewsSummary>(data, getActivity()) {
+            @Override
+            public int getItemLayoutId(int viewType) {
+                return R.layout.item_news_summary;
+            }
+
+            @Override
+            public void bindData(BaseRecyclerViewHolder holder, int position, NeteastNewsSummary item) {
+                Glide.with(getActivity()).load(item.imgsrc).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.ic_loading).error(R.drawable.ic_fail)
+                        .into(holder.getImageView(R.id.iv_news_summary_photo));
+                holder.getTextView(R.id.tv_news_summary_title).setText(item.title);
+                holder.getTextView(R.id.tv_news_summary_digest).setText(item.digest);
+                holder.getTextView(R.id.tv_news_summary_ptime).setText(item.ptime);
+            }
+
+
+        };
+        final LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setAutoLayoutManager(linearLayoutManager).setAutoHasFixedSize(true)
+                .addAutoItemDecoration(new BaseSpacesItemDecoration(MeasureUtil.dip2px(getActivity(),4)))
+                .setAutoItemAnimator(new DefaultItemAnimator()).setAutoAdapter(mAdapter);
 
     }
 }
