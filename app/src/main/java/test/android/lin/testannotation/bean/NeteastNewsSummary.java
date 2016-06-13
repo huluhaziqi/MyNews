@@ -38,9 +38,9 @@ public class NeteastNewsSummary {
     @JsonProperty("boardid")
     public String boardid;
     @JsonProperty("photosetID")
-    public int photosetID;
+    public String photosetID;
     @JsonProperty("template")
-    public int template;
+    public String template;
     @JsonProperty("votecount")
     public int votecount;
     @JsonProperty("skipID")

@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity<INewsPresenter> implements INewsV
                         , table.getNewsChannelType(), table.getNewsChannelIndex());
                 fragments.add(fragment);
             }
-        }
+
 //        for (int i = 0; i < title.size(); i++) {
 //            TextView textview = new TextView(this);
 //            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -80,19 +80,20 @@ public class MainActivity extends BaseActivity<INewsPresenter> implements INewsV
 //            textview.setGravity(Gravity.CENTER);
 //            view.add(textview);
 //        }
-        if (viewPager.getAdapter() == null) {
-            KLog.e("adapter为空");
-            BaseFragmentAdapter adapter = new BaseFragmentAdapter(getSupportFragmentManager(),
-                    fragments, title);
-            viewPager.setAdapter(adapter);
-        } else {
-            KLog.e("adapter不为空");
-            final BaseFragmentAdapter adapter = (BaseFragmentAdapter) viewPager.getAdapter();
-            adapter.updateFragment(fragments, title);
+            if (viewPager.getAdapter() == null) {
+                KLog.e("adapter为空");
+                BaseFragmentAdapter adapter = new BaseFragmentAdapter(getSupportFragmentManager(),
+                        fragments, title);
+                viewPager.setAdapter(adapter);
+            } else {
+                KLog.e("adapter不为空");
+                final BaseFragmentAdapter adapter = (BaseFragmentAdapter) viewPager.getAdapter();
+                adapter.updateFragment(fragments, title);
+            }
+            viewPager.setCurrentItem(0, false);
+            tablayout.setupWithViewPager(viewPager);
+            tablayout.setScrollPosition(0, 0, true);
         }
-        viewPager.setCurrentItem(0, false);
-        tablayout.setupWithViewPager(viewPager);
-        tablayout.setScrollPosition(0, 0, true);
 //        setOnTabSelectEvent(viewPager, tabLayout);
 //        setOnT
     }

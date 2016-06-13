@@ -2,6 +2,8 @@ package test.android.lin.testannotation.module.news.presenter;
 
 import android.widget.TableRow;
 
+import com.socks.library.KLog;
+
 import java.util.List;
 
 import test.android.lin.testannotation.base.BasePresenterImpl;
@@ -46,6 +48,7 @@ public class INewsListPresenterImpl
 
     @Override
     public void requestSuccess(List<NeteastNewsSummary> data) {
+        KLog.e("请求成功");
         mHashInit = true;
         if (data != null) {
             mStartPage += 20;

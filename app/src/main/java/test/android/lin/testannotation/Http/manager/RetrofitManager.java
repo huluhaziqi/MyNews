@@ -112,6 +112,7 @@ public class RetrofitManager {
     }
 
     private RetrofitManager(@HostType.HostTypeCheck int hostType) {
+        KLog.e("manager" + Api.getHost(hostType));
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Api.getHost(hostType))
                 .client(getsOkHttpClient()).addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
@@ -137,6 +138,7 @@ public class RetrofitManager {
     }
 
     public Observable<Map<String, List<NeteastNewsSummary>>> getNewsListObservable(String type, String id, int startPage) {
+        KLog.e("接收网络数据成功MyNews");
         return mNewsService.getNewsList(getCacheControl(), type, id, startPage)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).unsubscribeOn(Schedulers.io());
     }

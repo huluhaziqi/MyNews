@@ -1,5 +1,7 @@
 package test.android.lin.testannotation.Http;
 
+import com.socks.library.KLog;
+
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +23,10 @@ import test.android.lin.testannotation.bean.SinaPhotoList;
 public interface NewsService {
     @GET("nc/article/{type}/{id}/{startPage}-20.html")
     Observable<Map<String, List<NeteastNewsSummary>>> getNewsList(
+
             @Header("Cache-Control") String cacheControl,
-            @Path("type") String type,
-            @Path("id") String id,
-            @Path("startPage") int startPage
-    );
+            @Path("type") String type, @Path("id") String id,
+            @Path("startPage") int startPage);
 
     @GET("nc/article/{postId}/full.html")
     Observable<Map<String, NeteastNewsDetail>> getNewsDetail(@Header("Cache-control") String cacheControl,
